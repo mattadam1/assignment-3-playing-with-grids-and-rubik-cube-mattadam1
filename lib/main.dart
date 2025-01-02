@@ -29,28 +29,44 @@ class CubeState {
     [Colors.white, Colors.white, Colors.white, Colors.white], // Bottom
   ];
 
-  // Rotate top face to the left, modify if necessary
+  // Rotate top face to the left
   void rotateTop() {
-    // Store the top row of each face
-    List<Color> topRowFront = [faces[0][0], faces[0][1]];
-    List<Color> topRowLeft = [faces[1][0], faces[1][1]];
-    List<Color> topRowRight = [faces[2][0], faces[2][1]];
-    List<Color> topRowBack = [faces[3][0], faces[3][1]];
-
-    // Rotate top face
     List<Color> tempTop = [...faces[4]];
-    faces[4] = [tempTop[2], tempTop[3], tempTop[0], tempTop[1]];
+    faces[4] = [tempTop[2], tempTop[0], tempTop[3], tempTop[1]];
 
-    // Update adjacent faces
-    faces[0] = [faces[3][2], faces[3][3], ...faces[0].sublist(2)];
-    faces[1] = [faces[0][2], faces[0][3], ...faces[1].sublist(2)];
-    faces[2] = [faces[1][2], faces[1][3], ...faces[2].sublist(2)];
-    faces[3] = [faces[2][2], faces[2][3], ...faces[3].sublist(2)];
+    List<Color> tempFront = [faces[0][0], faces[0][1]];
+    List<Color> tempLeft = [faces[1][0], faces[1][1]];
+    List<Color> tempRight = [faces[2][0], faces[2][1]];
+    List<Color> tempBack = [faces[3][0], faces[3][1]];
+
+    faces[0][0] = tempLeft[0];
+    faces[0][1] = tempLeft[1];
+    faces[1][0] = tempBack[0];
+    faces[1][1] = tempBack[1];
+    faces[3][0] = tempRight[0];
+    faces[3][1] = tempRight[1];
+    faces[2][0] = tempFront[0];
+    faces[2][1] = tempFront[1];
   }
-  
-  // Rotate top face to the left, modify if necessary
+
+  // Rotate bottom face to the right
   void rotateBottom() {
-    //Need to implement your code here
+    List<Color> tempBottom = [...faces[5]];
+    faces[5] = [tempBottom[2], tempBottom[0], tempBottom[3], tempBottom[1]];
+
+    List<Color> tempFront = [faces[0][2], faces[0][3]];
+    List<Color> tempLeft = [faces[1][2], faces[1][3]];
+    List<Color> tempRight = [faces[2][2], faces[2][3]];
+    List<Color> tempBack = [faces[3][2], faces[3][3]];
+
+    faces[0][2] = tempRight[0];
+    faces[0][3] = tempRight[1];
+    faces[1][2] = tempFront[0];
+    faces[1][3] = tempFront[1];
+    faces[2][2] = tempBack[0];
+    faces[2][3] = tempBack[1];
+    faces[3][2] = tempLeft[0];
+    faces[3][3] = tempLeft[1];
   }
 }
 
@@ -67,6 +83,12 @@ class _CubeScreenState extends State<CubeScreen> {
   void rotateTop() {
     setState(() {
       cube.rotateTop();
+    });
+  }
+
+  void rotateBottom() {
+    setState(() {
+      cube.rotateBottom();
     });
   }
 
@@ -88,13 +110,6 @@ class _CubeScreenState extends State<CubeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('2x2 Rubik\'s Cube'),
-        // instead of using an icon button here, create atleast 2 buttons to rotate the faces, rotate left face, or rotate right face, or implement all rotations.
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.rotate_left),
-            onPressed: rotateTop,
-          )
-        ],
       ),
       body: Center(
         child: Column(
@@ -144,8 +159,17 @@ class _CubeScreenState extends State<CubeScreen> {
                 ),
               ],
             ),
-            // Bottom face , implement your bottom face
-            // Rear face, implement your rear face
+            // Buttons for rotation
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: rotateTop,
+                  child: const Text('Rotate Top'),
+                ),
+                ElevatedButton(
+                  onPressed: rotateBottom,
+                  child: const Text('Rotate Bottom'),
                 ),
               ],
             ),
